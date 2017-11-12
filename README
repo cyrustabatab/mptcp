@@ -13,3 +13,9 @@ Create multiple TCP connections between hosts in order to test congestion contro
 Use FlowMonitor and built in tracers to evaluate.
 Later, once evaluations are done, we can look into tweaking existing algorithm
 
+<<<<<<< HEAD
+=======
+Added mechanism to create own congestion control algorithm called CS218_ALGO
+which can be implemented within the switch statement.
+Set enum_value to the congestion control algorithm we are running.
+>>>>>>> 469c5240428538bb8e399342ee61d4082fa894f1
