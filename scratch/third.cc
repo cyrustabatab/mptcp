@@ -65,15 +65,15 @@ main (int argc, char *argv[])
       LogComponentEnable ("UdpEchoServerApplication", LOG_LEVEL_INFO);
     }
 
-  NodeContainer p2pNodes;
-  p2pNodes.Create (2);
+  //NodeContainer p2pNodes;
+  //p2pNodes.Create (2);
 
-  PointToPointHelper pointToPoint;
-  pointToPoint.SetDeviceAttribute ("DataRate", StringValue ("5Mbps"));
-  pointToPoint.SetChannelAttribute ("Delay", StringValue ("2ms"));
+  //PointToPointHelper pointToPoint;
+  //pointToPoint.SetDeviceAttribute ("DataRate", StringValue ("5Mbps"));
+  //pointToPoint.SetChannelAttribute ("Delay", StringValue ("2ms"));
 
-  NetDeviceContainer p2pDevices;
-  p2pDevices = pointToPoint.Install (p2pNodes);
+  //NetDeviceContainer p2pDevices;
+  //p2pDevices = pointToPoint.Install (p2pNodes);
 
   //NodeContainer csmaNodes;
   //csmaNodes.Add (p2pNodes.Get (1));
@@ -88,7 +88,8 @@ main (int argc, char *argv[])
 
   NodeContainer wifiStaNodes;
   wifiStaNodes.Create (nWifi);
-  NodeContainer wifiApNode = p2pNodes.Get (0);
+  NodeContainer wifiApNode;
+  wifiApNode.Create(1);
 
   YansWifiChannelHelper channel = YansWifiChannelHelper::Default ();
   YansWifiPhyHelper phy = YansWifiPhyHelper::Default ();
@@ -138,18 +139,17 @@ main (int argc, char *argv[])
   Ipv4AddressHelper address;
 
   address.SetBase ("10.1.1.0", "255.255.255.0");
-  Ipv4InterfaceContainer p2pInterfaces;
-  p2pInterfaces = address.Assign (p2pDevices);
+  //Ipv4InterfaceContainer p2pInterfaces;
+  //p2pInterfaces = address.Assign (p2pDevices);
 
-  //address.SetBase ("10.1.2.0", "255.255.255.0");
+  //address.setBase("10.1.2.0", "255.255.255.0");
   //Ipv4InterfaceContainer csmaInterfaces;
-  //csmaInterfaces = address.Assign (csmaDevices);
+  //csmaInterfaces = address.Assign(csmaDevices);
 
   address.SetBase ("10.1.3.0", "255.255.255.0");
-  address.Assign (staDevices);
+  Ipv4InterfaceContainer staInterfaces = address.Assign (staDevices);
   address.Assign (apDevices);
-  Ipv4InterfaceContainer staInterfaces;
-  staInterfaces = address.Assign (staDevices);
+  
 
   UdpEchoServerHelper echoServer (9);
 
@@ -157,13 +157,13 @@ main (int argc, char *argv[])
   serverApps.Start (Seconds (1.0));
   serverApps.Stop (Seconds (10.0));
 
-  UdpEchoClientHelper echoClient (staInterfaces.GetAddress (nWifi), 9);
+  UdpEchoClientHelper echoClient (staInterfaces.GetAddress (1), 9); //what address are you connecting o
   echoClient.SetAttribute ("MaxPackets", UintegerValue (1));
   echoClient.SetAttribute ("Interval", TimeValue (Seconds (1.0)));
   echoClient.SetAttribute ("PacketSize", UintegerValue (1024));
 
   ApplicationContainer clientApps = 
-    echoClient.Install (wifiStaNodes.Get (1));
+    echoClient.Install (wifiStaNodes.Get (nWifi -1 ));
   clientApps.Start (Seconds (2.0));
   clientApps.Stop (Seconds (30.0));
 
@@ -171,7 +171,7 @@ main (int argc, char *argv[])
 
   Simulator::Stop (Seconds (10.0));
 
-  pointToPoint.EnablePcapAll ("third");
+  //pointToPoint.EnablePcapAll ("third");
   phy.EnablePcap ("third", apDevices.Get (0));
   //csma.EnablePcap ("third", csmaDevices.Get (0), true);
 
