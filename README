@@ -19,3 +19,11 @@ Added mechanism to create own congestion control algorithm called CS218_ALGO
 which can be implemented within the switch statement.
 Set enum_value to the congestion control algorithm we are running.
 >>>>>>> 469c5240428538bb8e399342ee61d4082fa894f1
+
+INSTRUCTIONS
+1. Run ./setup.sh to build environment. If you are running on ssh, you need to remove --std=c++11 option from the setup script
+2. Move scripts to scratch folder and rebuild using ./waf to run those scripts
+3. Run your scripts using ./waf --run scratch/name-of-script
+
+To do command line arguments
+./waf --run "scratch/name-of-script --nWifi=18" depending on the arguments you can pass
