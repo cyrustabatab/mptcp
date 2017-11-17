@@ -90,13 +90,22 @@ main (int argc, char *argv[])
   NodeContainer wifiApNode;
   wifiApNode.Create(1);
 
+  NodeContainer secondChannelNodes;
+  secondChannelNodes.Add(wifiStaNodes.Get(10));
+  secondChannelNodes.Create(nWifi);
+  NodeContainer secondAccessPoint;
+  secondAccessPoint.Create(1);
+
   YansWifiChannelHelper channel = YansWifiChannelHelper::Default ();
   YansWifiPhyHelper phy = YansWifiPhyHelper::Default ();
   phy.SetChannel (channel.Create ());
 
+  YansWifiChannelHelper channel2 = YansWifiChannelHelper::Default();
+  YansWifiPhyHelper phy2 = YansWifiPhyHelper::Default();
+  phy2.SetChannel(channel.Create());
   WifiHelper wifi = WifiHelper::Default ();
   wifi.SetRemoteStationManager ("ns3::AarfWifiManager");
-
+  //std::cout << "Here" << std::endl;
   NqosWifiMacHelper mac = NqosWifiMacHelper::Default ();
 
   Ssid ssid = Ssid ("ns-3-ssid");
@@ -106,12 +115,20 @@ main (int argc, char *argv[])
 
   NetDeviceContainer staDevices;
   staDevices = wifi.Install (phy, mac, wifiStaNodes);
-
-  mac.SetType ("ns3::ApWifiMac",
-               "Ssid", SsidValue (ssid));
-
+  
+  mac.SetType("ns3::ApWifiMac", "Ssid", SsidValue(ssid));
   NetDeviceContainer apDevices;
-  apDevices = wifi.Install (phy, mac, wifiApNode);
+  apDevices = wifi.Install(phy, mac, wifiApNode);
+  
+  NetDeviceContainer secondChannelDevices;
+  Ssid ssid2 = Ssid("ns-3-ssid2");
+  mac.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssid2), "ActiveProbing", BooleanValue(false));
+  secondChannelDevices = wifi.Install(phy2, mac, secondChannelNodes);
+  mac.SetType ("ns3::ApWifiMac",
+               "Ssid", SsidValue (ssid2));
+
+  NetDeviceContainer secondAccessPointDevices;
+  secondAccessPointDevices = wifi.Install (phy2, mac, secondAccessPoint);
 
   MobilityHelper mobility;
 
@@ -129,11 +146,19 @@ main (int argc, char *argv[])
 
   mobility.SetMobilityModel ("ns3::ConstantPositionMobilityModel");
   mobility.Install (wifiApNode);
-
+  std::cout << "Reached here" << std::endl;
   InternetStackHelper stack;
   //stack.Install (csmaNodes);
   stack.Install (wifiApNode);
-  stack.Install (wifiStaNodes);
+  for(unsigned int i = 0; i < nWifi; i++)
+  {
+	if(i != 10)
+       	{
+		stack.Install(wifiStaNodes.Get(i));
+	}
+  }
+  stack.Install(secondChannelNodes);
+  
 
   Ipv4AddressHelper address;
 
@@ -148,21 +173,25 @@ main (int argc, char *argv[])
   address.SetBase ("10.1.3.0", "255.255.255.0");
   Ipv4InterfaceContainer staInterfaces = address.Assign (staDevices);
   address.Assign (apDevices);
+
+  address.SetBase("10.1.4.0", "255.255.255.0");
+  Ipv4InterfaceContainer secondChannelInterfaces = address.Assign(secondChannelDevices);
+  address.Assign(secondAccessPointDevices);
   
 
   UdpEchoServerHelper echoServer (9);
 
-  ApplicationContainer serverApps = echoServer.Install (wifiStaNodes.Get (1));
+  ApplicationContainer serverApps = echoServer.Install (secondChannelNodes.Get (1));
   serverApps.Start (Seconds (1.0));
   serverApps.Stop (Seconds (10.0));
 
-  UdpEchoClientHelper echoClient (staInterfaces.GetAddress (1), 9); //what address are you connecting o
+  UdpEchoClientHelper echoClient (secondChannelInterfaces.GetAddress (1), 9); //what address are you connecting o
   echoClient.SetAttribute ("MaxPackets", UintegerValue (1));
   echoClient.SetAttribute ("Interval", TimeValue (Seconds (1.0)));
   echoClient.SetAttribute ("PacketSize", UintegerValue (1024));
 
   ApplicationContainer clientApps = 
-    echoClient.Install (wifiStaNodes.Get (nWifi -1 ));
+    echoClient.Install (secondChannelNodes.Get (nWifi -1 ));
   clientApps.Start (Seconds (2.0));
   clientApps.Stop (Seconds (30.0));
 
