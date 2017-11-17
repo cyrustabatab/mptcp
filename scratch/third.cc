@@ -134,6 +134,7 @@ main (int argc, char *argv[])
   //stack.Install (csmaNodes);
   stack.Install (wifiApNode);
   stack.Install (wifiStaNodes);
+  stack.Install(p2pNodes.Get(1));
 
   Ipv4AddressHelper address;
 
@@ -146,18 +147,19 @@ main (int argc, char *argv[])
   //csmaInterfaces = address.Assign (csmaDevices);
 
   address.SetBase ("10.1.3.0", "255.255.255.0");
-  address.Assign (staDevices);
-  address.Assign (apDevices);
+ 
+ 
   Ipv4InterfaceContainer staInterfaces;
-  staInterfaces = address.Assign (staDevices);
+  staInterfaces = address.Assign(staDevices);
+  address.Assign(apDevices);
 
   UdpEchoServerHelper echoServer (9);
 
-  ApplicationContainer serverApps = echoServer.Install (wifiStaNodes.Get (1));
+  ApplicationContainer serverApps = echoServer.Install (wifiStaNodes.Get (nWifi - 1));
   serverApps.Start (Seconds (1.0));
   serverApps.Stop (Seconds (10.0));
 
-  UdpEchoClientHelper echoClient (staInterfaces.GetAddress (nWifi), 9);
+  UdpEchoClientHelper echoClient (staInterfaces.GetAddress (nWifi - 1), 9);
   echoClient.SetAttribute ("MaxPackets", UintegerValue (1));
   echoClient.SetAttribute ("Interval", TimeValue (Seconds (1.0)));
   echoClient.SetAttribute ("PacketSize", UintegerValue (1024));
