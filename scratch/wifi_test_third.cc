@@ -148,7 +148,6 @@ main (int argc, char *argv[])
   InternetStackHelper stack;
   //stack.Install (csmaNodes);
   stack.Install (wifiApNode);
-  std::cout << "WORKS" << std::endl;
   for(unsigned int i = 0; i < nWifi; i++)
   {
 	if(i != nWifi - 1)
@@ -157,7 +156,6 @@ main (int argc, char *argv[])
 	}
   }
   stack.Install(secondChannelNodes);
-  std::cout << "FAILS" << std::endl;
 
   Ipv4AddressHelper address;
 
@@ -173,16 +171,18 @@ main (int argc, char *argv[])
   Ipv4InterfaceContainer staInterfaces = address.Assign (staDevices);
   address.Assign (apDevices);
 
+  stack.Install(secondAccessPoint);
   address.SetBase("10.1.4.0", "255.255.255.0");
   Ipv4InterfaceContainer secondChannelInterfaces = address.Assign(secondChannelDevices);
   address.Assign(secondAccessPointDevices);
+  std::cout << "WORKS" << std::endl;
   
-
   UdpEchoServerHelper echoServer (9);
 
   ApplicationContainer serverApps = echoServer.Install (secondChannelNodes.Get (1));
   serverApps.Start (Seconds (1.0));
   serverApps.Stop (Seconds (10.0));
+  std::cout << "FAILS" << std::endl;
 
   UdpEchoClientHelper echoClient (secondChannelInterfaces.GetAddress (1), 9); //what address are you connecting o
   echoClient.SetAttribute ("MaxPackets", UintegerValue (1));
