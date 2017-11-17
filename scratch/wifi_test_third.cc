@@ -42,7 +42,7 @@ main (int argc, char *argv[])
 {
   bool verbose = true;
   //uint32_t nCsma = 3;
-  uint32_t nWifi = 3;
+  uint32_t nWifi = 18;
 
   CommandLine cmd;
   //cmd.AddValue ("nCsma", "Number of \"extra\" CSMA nodes/devices", nCsma);
@@ -91,7 +91,7 @@ main (int argc, char *argv[])
   wifiApNode.Create(1);
 
   NodeContainer secondChannelNodes;
-  secondChannelNodes.Add(wifiStaNodes.Get(10));
+  secondChannelNodes.Add(wifiStaNodes.Get(nWifi -1));
   secondChannelNodes.Create(nWifi);
   NodeContainer secondAccessPoint;
   secondAccessPoint.Create(1);
