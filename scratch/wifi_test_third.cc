@@ -42,7 +42,7 @@ main (int argc, char *argv[])
 {
   bool verbose = true;
   //uint32_t nCsma = 3;
-  uint32_t nWifi = 18;
+  uint32_t nWifi = 10;
 
   CommandLine cmd;
   //cmd.AddValue ("nCsma", "Number of \"extra\" CSMA nodes/devices", nCsma);
@@ -122,9 +122,7 @@ main (int argc, char *argv[])
   NetDeviceContainer secondChannelDevices;
   Ssid ssid2 = Ssid("ns-3-ssid2");
   mac.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssid2), "ActiveProbing", BooleanValue(false));
-  std::cout << "WORKS" << std::endl;
   secondChannelDevices = wifi.Install(phy2, mac, secondChannelNodes);
-  std::cout << "FAILS" << std::endl;
   mac.SetType ("ns3::ApWifiMac",
                "Ssid", SsidValue (ssid2));
 
@@ -150,15 +148,16 @@ main (int argc, char *argv[])
   InternetStackHelper stack;
   //stack.Install (csmaNodes);
   stack.Install (wifiApNode);
+  std::cout << "WORKS" << std::endl;
   for(unsigned int i = 0; i < nWifi; i++)
   {
-	if(i != 10)
-       	{
+	if(i != nWifi - 1)
+    {
 		stack.Install(wifiStaNodes.Get(i));
 	}
   }
   stack.Install(secondChannelNodes);
-  
+  std::cout << "FAILS" << std::endl;
 
   Ipv4AddressHelper address;
 
