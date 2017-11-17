@@ -175,14 +175,12 @@ main (int argc, char *argv[])
   address.SetBase("10.1.4.0", "255.255.255.0");
   Ipv4InterfaceContainer secondChannelInterfaces = address.Assign(secondChannelDevices);
   address.Assign(secondAccessPointDevices);
-  std::cout << "WORKS" << std::endl;
   
   UdpEchoServerHelper echoServer (9);
 
   ApplicationContainer serverApps = echoServer.Install (secondChannelNodes.Get (1));
   serverApps.Start (Seconds (1.0));
   serverApps.Stop (Seconds (10.0));
-  std::cout << "FAILS" << std::endl;
 
   UdpEchoClientHelper echoClient (secondChannelInterfaces.GetAddress (1), 9); //what address are you connecting o
   echoClient.SetAttribute ("MaxPackets", UintegerValue (1));
@@ -202,7 +200,9 @@ main (int argc, char *argv[])
   phy.EnablePcap ("third", apDevices.Get (0));
   //csma.EnablePcap ("third", csmaDevices.Get (0), true);
 
+  std::cout << "WORKS" << std::endl;
   Simulator::Run ();
+  std::cout << "FAILS" << std::endl;
   Simulator::Destroy ();
   return 0;
 }
