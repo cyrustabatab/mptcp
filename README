@@ -3,25 +3,23 @@ We have developed a model for MultiPath-TCP (MPTCP) in ns-3, which conform to RF
 A brief description of our model can be found in our recent short paper, which was presented at the WNS3-2014 workshop, with the following link: http://arxiv.org/abs/1510.07721
 
 You can refer to this code in your paper by citing the above short paper.
+Credits: https://github.com/mkheirkhah/mmptcp
+
 Evaluation of congestion control of MPTCP
 Testing notifications
-
-run ./setup.sh to automate ./waf clean ./waf configure and ./waf
 
 Create multiple topologies to test congestion. Under tutorial/examples ns-3 provides examples of differing topologies that we can extend.
 Create multiple TCP connections between hosts in order to test congestion control.
 Use FlowMonitor and built in tracers to evaluate.
 Later, once evaluations are done, we can look into tweaking existing algorithm
 
-<<<<<<< HEAD
 =======
 Added mechanism to create own congestion control algorithm called CS218_ALGO
 which can be implemented within the switch statement.
 Set enum_value to the congestion control algorithm we are running.
->>>>>>> 469c5240428538bb8e399342ee61d4082fa894f1
 
 INSTRUCTIONS
-1. Run ./setup.sh to build environment. If you are running on ssh, you need to remove --std=c++11 option from the setup script
+1. Run ./setup.sh
 2. Move scripts to scratch folder and rebuild using ./waf to run those scripts
 3. Run your scripts using ./waf --run scratch/name-of-script
 
