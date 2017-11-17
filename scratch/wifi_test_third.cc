@@ -105,7 +105,6 @@ main (int argc, char *argv[])
   phy2.SetChannel(channel.Create());
   WifiHelper wifi = WifiHelper::Default ();
   wifi.SetRemoteStationManager ("ns3::AarfWifiManager");
-  //std::cout << "Here" << std::endl;
   NqosWifiMacHelper mac = NqosWifiMacHelper::Default ();
 
   Ssid ssid = Ssid ("ns-3-ssid");
@@ -123,7 +122,9 @@ main (int argc, char *argv[])
   NetDeviceContainer secondChannelDevices;
   Ssid ssid2 = Ssid("ns-3-ssid2");
   mac.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssid2), "ActiveProbing", BooleanValue(false));
+  std::cout << "WORKS" << std::endl;
   secondChannelDevices = wifi.Install(phy2, mac, secondChannelNodes);
+  std::cout << "FAILS" << std::endl;
   mac.SetType ("ns3::ApWifiMac",
                "Ssid", SsidValue (ssid2));
 
@@ -146,7 +147,6 @@ main (int argc, char *argv[])
 
   mobility.SetMobilityModel ("ns3::ConstantPositionMobilityModel");
   mobility.Install (wifiApNode);
-  std::cout << "Reached here" << std::endl;
   InternetStackHelper stack;
   //stack.Install (csmaNodes);
   stack.Install (wifiApNode);
