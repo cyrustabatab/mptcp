@@ -4,8 +4,8 @@
 # Modules that depend on the listed modules will be enabled also.
 #
 # All modules can be enabled by choosing 'all_modules'.
-#modules_enabled = ['all_modules']
-modules_enabled = ['internet', 'applications', 'point-to-point', 'wifi']
+modules_enabled = ['all_modules']
+#modules_enabled = ['internet', 'applications', 'point-to-point', 'wifi']
 
 # Set this equal to true if you want examples to be run.
 examples_enabled = False
