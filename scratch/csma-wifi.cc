@@ -50,16 +50,18 @@ main (int argc, char *argv[])
   Config::SetDefault("ns3::DropTailQueue::Mode", StringValue("QUEUE_MODE_PACKETS"));
   Config::SetDefault("ns3::DropTailQueue::MaxPackets", UintegerValue(100));
   Config::SetDefault("ns3::TcpL4Protocol::SocketType", TypeIdValue(MpTcpSocketBase::GetTypeId()));
-  Config::SetDefault("ns3::MpTcpSocketBase::MaxSubflows", UintegerValue(8));
   Config::SetDefault("ns3::MpTcpSocketBase::PathManagement", StringValue("NdiffPorts"));
+  //Config::SetDefault("ns3::Ipv4GlobalRouting::RandomEcmpRouting", BooleanValue(true));
   bool verbose = true;
   uint32_t nCsma = 18;
   uint32_t nWifi = 18;
-  //Config::SetDefault("ns3::Ipv4GlobalRouting::RandomEcmpRouting", BooleanValue(true));
+  uint32_t nSubFlows = 8;
   CommandLine cmd;
   cmd.AddValue ("nCsma", "Number of \"extra\" CSMA nodes/devices", nCsma);
   cmd.AddValue ("nWifi", "Number of wifi STA devices", nWifi);
+  cmd.AddValue ("nSubFlows", "Number of wifi STA devices", nSubFlows);
   cmd.AddValue ("verbose", "Tell echo applications to log if true", verbose);
+  Config::SetDefault("ns3::MpTcpSocketBase::MaxSubflows", UintegerValue(nSubFlows));
 
   cmd.Parse (argc,argv);
 
