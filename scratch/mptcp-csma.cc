@@ -51,7 +51,10 @@ main(int argc, char *argv[])
   //Below, we set the path management algorithm used. N diff ports uses one IP address and different port numbers while the one we should use later when are topology is compatible, is full mesh where multiple IPs are used
   Config::SetDefault("ns3::MpTcpSocketBase::PathManagement", StringValue("NdiffPorts"));
 
-  NodeContainer nodes;
+
+  LogComponentEnable("UdpEchoClientApplication", LOG_LEVEL_INFO);
+  LogComponentEnable("UdpEchoServerApplication", LOG_LEVEL_INFO);
+  NodeContainer nodes;  
   nodes.Create(18);
   
 
@@ -71,7 +74,38 @@ main(int argc, char *argv[])
   ipv4.SetBase("10.1.1.0", "255.255.255.0");
   Ipv4InterfaceContainer i = ipv4.Assign(csmaDevices);
 
+
+
+  UdpEchoServerHelper echoServer(9);
+
+  ApplicationContainer serverApps = echoServer.Install(nodes.Get(10));
+  serverApps.Start(Seconds(1.0));
+  serverApps.Start(Seconds(10.0));
+
+
+  UdpEchoClientHelper echoClient (i.GetAddress(10), 9);
+  echoClient.SetAttribute("MaxPackets", UintegerValue(1));
+  echoClient.SetAttribute("Interval", TimeValue(Seconds(1)));
+  echoClient.SetAttribute("PacketSize", UintegerValue(1024));
+
+  ApplicationContainer clientApps;
+  for(int i = 0; i < 18; i++)
+  {
+	if(i == 0 || i == 17 || i == 10)
+        {
+		continue;
+	}
+
+        clientApps.Add(echoClient.Install(nodes.Get(i)));
+        
+
+	
+  }
+  //clientApps = echoClient.Install(nodes.Get(1));
+  clientApps.Start(Seconds(1.0));
+  clientApps.Stop(Seconds(10.0));
   uint16_t port = 9;
+  
   MpTcpPacketSinkHelper sink("ns3::TcpSocketFactory", InetSocketAddress(Ipv4Address::GetAny(), port));
   ApplicationContainer sinkApps = sink.Install(nodes.Get(17));
   sinkApps.Start(Seconds(0.0));
@@ -82,7 +116,7 @@ main(int argc, char *argv[])
   ApplicationContainer sourceApps = source.Install(nodes.Get(0));
   sourceApps.Start(Seconds(0.0));
   sourceApps.Stop(Seconds(10.0));
-
+  
   NS_LOG_INFO ("Run Simulation.");
   Simulator::Stop(Seconds(20.0));
   Simulator::Run();
