@@ -54,8 +54,8 @@ main(int argc, char *argv[])
   Config::SetDefault("ns3::MpTcpSocketBase::PathManagement", StringValue("NdiffPorts"));
 
 
-  LogComponentEnable("UdpEchoClientApplication", LOG_LEVEL_INFO);
-  LogComponentEnable("UdpEchoServerApplication", LOG_LEVEL_INFO);
+  //LogComponentEnable("UdpEchoClientApplication", LOG_LEVEL_INFO);
+  //LogComponentEnable("UdpEchoServerApplication", LOG_LEVEL_INFO);
   NodeContainer nodes;  
   nodes.Create(18);
   
@@ -111,19 +111,22 @@ main(int argc, char *argv[])
 
 
 
-  UdpEchoServerHelper echoServer(9);
 
+  
+  
+  UdpEchoServerHelper echoServer(9);
   ApplicationContainer serverApps = echoServer.Install(nodes.Get(10));
   serverApps.Start(Seconds(1.0));
   serverApps.Start(Seconds(10.0));
 
 
   UdpEchoClientHelper echoClient (i.GetAddress(10), 9);
-  echoClient.SetAttribute("MaxPackets", UintegerValue(1));
-  echoClient.SetAttribute("Interval", TimeValue(Seconds(1)));
+  echoClient.SetAttribute("MaxPackets", UintegerValue(10000000));
+  echoClient.SetAttribute("Interval", TimeValue(Seconds(0.1)));
   echoClient.SetAttribute("PacketSize", UintegerValue(1024));
-
   ApplicationContainer clientApps;
+  
+  
   for(int i = 0; i < 18; i++)
   {
 	if(i == 0 || i == 17 || i == 10)
