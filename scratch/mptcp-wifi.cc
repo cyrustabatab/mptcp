@@ -59,13 +59,16 @@ main(int argc, char *argv[])
   //LogComponentEnable("UdpEchoClientApplication", LOG_LEVEL_INFO);
   //LogComponentEnable("UdpEchoServerApplication", LOG_LEVEL_INFO);
 
-  //create the 18 nodes that are part of topology
+  uint16_t nodeCount = 18;
+  uint16_t accessPointCount = 1;
+
+  //create the nodes that are part of topology
   NodeContainer nodes;  
-  nodes.Create(18);
+  nodes.Create(nodeCount);
   
   //have one access point
   NodeContainer accessPoint;
-  accessPoint.Create(1);
+  accessPoint.Create(accessPointCount);
 
   //create the channel and physical layer to be used by WifiHelper
   YansWifiChannelHelper channel = YansWifiChannelHelper::Default();
@@ -129,18 +132,17 @@ main(int argc, char *argv[])
   Ipv4InterfaceContainer i = ipv4.Assign(staDevices);
   ipv4.Assign(apDevices);
 
-
-
-
   
+  uint16_t port = 9;
+  uint16_t udpServerNode = (nodeCount/2)+1;
   //create the udp echo server on one device
-  UdpEchoServerHelper echoServer(9);
-  ApplicationContainer serverApps = echoServer.Install(nodes.Get(10));
+  UdpEchoServerHelper echoServer(port);
+  ApplicationContainer serverApps = echoServer.Install(nodes.Get(udpServerNode));
   serverApps.Start(Seconds(1.0));
   serverApps.Start(Seconds(10.0));
 
   //create the udp echo client helper and set attributes
-  UdpEchoClientHelper echoClient (i.GetAddress(10), 9);
+  UdpEchoClientHelper echoClient (i.GetAddress(udpServerNode), port);
   echoClient.SetAttribute("MaxPackets", UintegerValue(10000000));
   echoClient.SetAttribute("Interval", TimeValue(Seconds(0.1)));
   echoClient.SetAttribute("PacketSize", UintegerValue(1024));
@@ -148,31 +150,23 @@ main(int argc, char *argv[])
   
   
   //install udp echo client on machines
-  for(int i = 0; i < 18; i++)
+  for(int i = 1; i < nodeCount-1; i++)
   {
-	if(i == 0 || i == 17 || i == 10)
-        {
-		continue;
-	}
-
+	if(i != udpServerNode)
         clientApps.Add(echoClient.Install(nodes.Get(i)));
-        
-
-	
   }
+  
   //clientApps = echoClient.Install(nodes.Get(1));
   clientApps.Start(Seconds(1.0));
   clientApps.Stop(Seconds(10.0));
-  uint16_t port = 9;
-  
 
   //set up mptcp packet sink and bulk sender. same as mptcp.cc
   MpTcpPacketSinkHelper sink("ns3::TcpSocketFactory", InetSocketAddress(Ipv4Address::GetAny(), port));
-  ApplicationContainer sinkApps = sink.Install(nodes.Get(17));
+  ApplicationContainer sinkApps = sink.Install(nodes.Get(nodeCount-1));
   sinkApps.Start(Seconds(0.0));
   sinkApps.Stop(Seconds(10.0));
 
-  MpTcpBulkSendHelper source("ns3::TcpSocketFactory", InetSocketAddress(Ipv4Address(i.GetAddress(17)), port));
+  MpTcpBulkSendHelper source("ns3::TcpSocketFactory", InetSocketAddress(Ipv4Address(i.GetAddress(nodeCount-1)), port));
   source.SetAttribute("MaxBytes", UintegerValue(0));
   ApplicationContainer sourceApps = source.Install(nodes.Get(0));
   sourceApps.Start(Seconds(0.0));
