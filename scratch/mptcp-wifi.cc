@@ -41,6 +41,8 @@ main(int argc, char *argv[])
 {
   LogComponentEnable("MpTcpSocketBase", LOG_INFO);
 
+
+  //Configure mptcp
   Config::SetDefault("ns3::Ipv4GlobalRouting::FlowEcmpRouting", BooleanValue(true));
   Config::SetDefault("ns3::TcpSocket::SegmentSize", UintegerValue(1400));
   Config::SetDefault("ns3::TcpSocket::DelAckCount", UintegerValue(0));
@@ -53,39 +55,55 @@ main(int argc, char *argv[])
   //Below, we set the path management algorithm used. N diff ports uses one IP address and different port numbers while the one we should use later when are topology is compatible, is full mesh where multiple IPs are used
   Config::SetDefault("ns3::MpTcpSocketBase::PathManagement", StringValue("NdiffPorts"));
 
-
+  //Enable logging for udp echo client and server
   //LogComponentEnable("UdpEchoClientApplication", LOG_LEVEL_INFO);
   //LogComponentEnable("UdpEchoServerApplication", LOG_LEVEL_INFO);
+
+  //create the 18 nodes that are part of topology
   NodeContainer nodes;  
   nodes.Create(18);
   
+  //have one access point
   NodeContainer accessPoint;
   accessPoint.Create(1);
 
+  //create the channel and physical layer to be used by WifiHelper
   YansWifiChannelHelper channel = YansWifiChannelHelper::Default();
   YansWifiPhyHelper phy = YansWifiPhyHelper::Default();
   phy.SetChannel(channel.Create());
 
+
+  //set up wifi settings
   WifiHelper wifi = WifiHelper::Default();
   wifi.SetRemoteStationManager("ns3::AarfWifiManager");
 
+
+  //what type of MAC is being used
   NqosWifiMacHelper mac = NqosWifiMacHelper::Default();
   
+  //the ssid of the AP
   Ssid ssid = Ssid("AP1");
+  //configure mac for mobile hosts
   mac.SetType("ns3::StaWifiMac",
               "Ssid", SsidValue(ssid),
               "ActiveProbing", BooleanValue(false));
 
 
+  //create interfaces
   NetDeviceContainer staDevices;
   staDevices = wifi.Install(phy,mac,nodes);
 
+  //configure mac for access point
   mac.SetType("ns3::ApWifiMac","Ssid", SsidValue(ssid));
 
+
+  //create interface for accesspoint
   NetDeviceContainer apDevices;
   apDevices = wifi.Install(phy,mac, accessPoint);
   
 
+
+  //this section sets up mobility for mobile hosts
   MobilityHelper mobility;
 
   mobility.SetPositionAllocator("ns3::GridPositionAllocator", "MinX", DoubleValue(0.0), "MinY", DoubleValue(0.0), "DeltaX", DoubleValue(5.0), "DeltaY", DoubleValue(10.0), "GridWidth", UintegerValue(3), "LayoutType", StringValue("RowFirst"));
@@ -101,6 +119,8 @@ main(int argc, char *argv[])
 
   
   
+
+  //install internet stack on hosts and assign addresses
   InternetStackHelper internet;
   internet.Install(nodes);
   internet.Install(accessPoint);
@@ -113,13 +133,13 @@ main(int argc, char *argv[])
 
 
   
-  
+  //create the udp echo server on one device
   UdpEchoServerHelper echoServer(9);
   ApplicationContainer serverApps = echoServer.Install(nodes.Get(10));
   serverApps.Start(Seconds(1.0));
   serverApps.Start(Seconds(10.0));
 
-
+  //create the udp echo client helper and set attributes
   UdpEchoClientHelper echoClient (i.GetAddress(10), 9);
   echoClient.SetAttribute("MaxPackets", UintegerValue(10000000));
   echoClient.SetAttribute("Interval", TimeValue(Seconds(0.1)));
@@ -127,6 +147,7 @@ main(int argc, char *argv[])
   ApplicationContainer clientApps;
   
   
+  //install udp echo client on machines
   for(int i = 0; i < 18; i++)
   {
 	if(i == 0 || i == 17 || i == 10)
@@ -144,6 +165,8 @@ main(int argc, char *argv[])
   clientApps.Stop(Seconds(10.0));
   uint16_t port = 9;
   
+
+  //set up mptcp packet sink and bulk sender. same as mptcp.cc
   MpTcpPacketSinkHelper sink("ns3::TcpSocketFactory", InetSocketAddress(Ipv4Address::GetAny(), port));
   ApplicationContainer sinkApps = sink.Install(nodes.Get(17));
   sinkApps.Start(Seconds(0.0));
