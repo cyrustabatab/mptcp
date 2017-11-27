@@ -112,12 +112,12 @@ MpTcpSocketBase::GetTypeId(void)
           MakeBooleanChecker())
 
       .AddAttribute ("ShortPlotting", " Activate large flow plotting ",
-          BooleanValue (false),
+          BooleanValue (true),
           MakeBooleanAccessor (&MpTcpSocketBase::m_shortPlotting),
           MakeBooleanChecker())
 
       .AddAttribute ("LargePlotting", " Activate short flow plotting ",
-          BooleanValue (false),
+          BooleanValue (true),
           MakeBooleanAccessor (&MpTcpSocketBase::m_largePlotting),
           MakeBooleanChecker());
 
