@@ -39,7 +39,7 @@
 #include "ns3/drop-tail-queue.h"
 #include "ns3/object-vector.h"
 
-//#define PLOT
+#define PLOT
 #define RAND_GAP
 
 NS_LOG_COMPONENT_DEFINE("MpTcpSocketBase");
@@ -3228,8 +3228,8 @@ MpTcpSocketBase::Close(uint8_t sFlowIdx)
             { // This is only true for background flows
               cout <<"[" << m_node->GetId() << "]{" << flowId<<"}("<< flowType<< ") -> DoGenerateOutPutFile()"<< endl;
               flowCompletionTime = false;
-//              DoGenerateOutPutFile();
-//              GeneratePlots();
+              //DoGenerateOutPutFile();
+              GeneratePlots();
             }
           NS_LOG_INFO ("Socket " << this << " deferring close, Connection state " << TcpStateName[m_state] << " PendingData: " << sendingBuffer.PendingData());
         }
@@ -3361,9 +3361,9 @@ MpTcpSocketBase::CloseMultipathConnection()
       if (m_state == ESTABLISHED && client) // We could remove client ... it should work but it generate plots for receiver as well.
         {
           NS_LOG_INFO("CloseMultipathConnection -> GENERATE PLOTS SUCCESSFULLY -> HoOoOrA  pAck: " << pAck);
-//          GenerateCWNDPlot();
-//          GenerateSendvsACK();
-//          GeneratePlots();
+          //GenerateCWNDPlot();
+          //GenerateSendvsACK();
+          GeneratePlots();
         }
       if (m_state != CLOSED)
         {
@@ -4204,8 +4204,8 @@ MpTcpSocketBase::IsLastAck()
       if (dataLeft == 0)
         {
           flowCompletionTime = false;
-//          DoGenerateOutPutFile();
-//          GeneratePlots();
+	  //DoGenerateOutPutFile();
+          GeneratePlots();
         }
     }
 }
