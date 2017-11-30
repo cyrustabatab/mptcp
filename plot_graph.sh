@@ -10,7 +10,7 @@ echo "Start"
 
 gnuplot $1
 
-for i in *.eps; do convert $i $i.png; done
+for i in *.eps; do convert $i -resize "1428x1000" -quality 100 $i.png; done
 
 rm -f *.eps
 
