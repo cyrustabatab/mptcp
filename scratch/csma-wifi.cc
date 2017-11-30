@@ -239,7 +239,7 @@ main (int argc, char *argv[])
   //cout << "Here" << endl;
   MpTcpBulkSendHelper source("ns3::TcpSocketFactory", InetSocketAddress(Ipv4Address(secondLANInterfaces.GetAddress(10)), 9));
   source.SetAttribute("MaxBytes", UintegerValue(0));
-  ApplicationContainer sourceApps = source.Install(thirdLAN.Get(1));
+  ApplicationContainer sourceApps = source.Install(csmaNodes.Get(0));
   sourceApps.Start(Seconds(0.0));
   sourceApps.Stop(Seconds(10.0));
   //cout << "Here1" << endl;
