@@ -120,7 +120,9 @@ MpTcpSubFlow::CwndTracer(uint32_t oldval, uint32_t newval)
 {
   //NS_LOG_UNCOND("Subflow "<< routeId <<": Moving cwnd from " << oldval << " to " << newval);
   std::ofstream ofs;
-  std::string fileName = std::to_string(routeId) + ".csv";
+  std::ostringstream oss;
+  oss << routeId << ".csv";
+  std::string fileName = oss.str();
 
   ofs.open(fileName, std::ofstream::out | std::ofstream::app);
   ofs << newval << endl;
