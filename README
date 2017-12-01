@@ -30,3 +30,7 @@ To pipe output into a log file:
 ./waf --run scratch/mptcp-wifi | tee a.txt
 ./waf --run scratch/mptcp-wifi | awk '$1~/^(SF|RTT)$/{print $3 > $1"_"$2".csv"}'
  
+To collect statistics:
+python stats.py
+nano stats.txt
+
