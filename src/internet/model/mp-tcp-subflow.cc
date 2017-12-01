@@ -122,6 +122,7 @@ MpTcpSubFlow::CwndTracer(uint32_t oldval, uint32_t newval)
   cwndTracer.push_back(make_pair(Simulator::Now().GetSeconds(), newval));
   sstTracer.push_back(make_pair(Simulator::Now().GetSeconds(), ssthresh));
   rttTracer.push_back(make_pair(Simulator::Now().GetSeconds(), rtt->GetCurrentEstimate().GetMilliSeconds()));
+  cout << "RTT " << routeId << " " << rtt->GetCurrentEstimate().GetMilliSeconds() << endl; 
   rtoTracer.push_back(make_pair(Simulator::Now().GetSeconds(), rtt->RetransmitTimeout().GetMilliSeconds()));
 }
 
