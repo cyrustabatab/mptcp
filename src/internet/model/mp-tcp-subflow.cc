@@ -24,8 +24,6 @@
 #include "ns3/log.h"
 #include "mp-tcp-subflow.h"
 
-#include <fstream>
-
 NS_LOG_COMPONENT_DEFINE("MpTcpSubflow");
 
 namespace ns3{
@@ -119,17 +117,7 @@ void
 MpTcpSubFlow::CwndTracer(uint32_t oldval, uint32_t newval)
 {
   //NS_LOG_UNCOND("Subflow "<< routeId <<": Moving cwnd from " << oldval << " to " << newval);
-  std::ofstream ofs;
-  std::ostringstream oss;
-  oss << routeId << ".csv";
-  std::string fileName = oss.str();
-
-  ofs.open(fileName, std::ofstream::out | std::ofstream::app);
-  ofs << newval << endl;
-
-  ofs.close();
-
-  //cout << "Subflow " << routeId << ": Moving cwnd from " << oldval << " to " << newval << endl;
+  cout << "Subflow " << routeId << ": Moving cwnd from " << oldval << " to " << newval << endl;
   cwndTracer.push_back(make_pair(Simulator::Now().GetSeconds(), newval));
   sstTracer.push_back(make_pair(Simulator::Now().GetSeconds(), ssthresh));
   rttTracer.push_back(make_pair(Simulator::Now().GetSeconds(), rtt->GetCurrentEstimate().GetMilliSeconds()));
