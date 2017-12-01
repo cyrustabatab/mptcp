@@ -9,3 +9,4 @@ for f in file_list:
 	array  = np.genfromtxt(f)
         stats_file.write("Average: " + str(np.mean(array))+ "\n");
         stats_file.write("Standard Deviation: " + str(np.std(array)) + "\n\n")
+stats_file.close()
