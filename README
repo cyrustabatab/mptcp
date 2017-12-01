@@ -28,5 +28,5 @@ To do command line arguments
 
 To pipe output into a log file:
 ./waf --run scratch/mptcp-wifi | tee a.txt
-./waf --run scratch/mptcp-wifi | awk '$1~/^(SF|RTT)$/{print $3 > "$1_"$2".csv"}'
+./waf --run scratch/mptcp-wifi | awk '$1~/^(SF|RTT)$/{print $3 > $1"_"$2".csv"}'
  
