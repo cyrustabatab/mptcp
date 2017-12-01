@@ -27,4 +27,6 @@ To do command line arguments
 ./waf --run "scratch/name-of-script --nWifi=18" depending on the arguments you can pass
 
 To pipe output into a log file:
-python -u waf --run scratch/mptcp-wifi | tee a.txt
+./waf --run scratch/mptcp-wifi | tee a.txt
+./waf --run scratch/mptcp-wifi | awk '$1~/^#SF$/{print $3 > "subflow_"$2".csv"}'
+ 
