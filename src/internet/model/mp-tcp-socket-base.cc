@@ -1891,7 +1891,7 @@ MpTcpSocketBase::ReduceCWND(uint8_t sFlowIdx, DSNMapping* ptrDSN)
   case CS218_ALGO:
     //TODO: New logic here...
     sFlow->ssthresh = std::max(2 * mss, BytesInFlight(sFlowIdx) / 2);
-    sFlow->cwnd = sFlow->ssthresh + -5 * mss;
+    sFlow->cwnd = sFlow->ssthresh +  -7 * mss;
     break;
 
   default:
@@ -3902,7 +3902,8 @@ MpTcpSocketBase::OpenCWND(uint8_t sFlowIdx, uint32_t ackedBytes)
           sFlow->cwnd = cwnd + tmp;
           break;
       case CS218_ALGO:
-	  //logic goes here
+          //TODO: New logic here...
+            sFlow->cwnd = cwnd + ackedBytes * 0.05;
           break;
       default:
         break;

@@ -118,9 +118,6 @@ main(int argc, char *argv[])
   mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
   mobility.Install(accessPoint);
 
-
-
-  
   
 
   //install internet stack on hosts and assign addresses
@@ -132,7 +129,6 @@ main(int argc, char *argv[])
   Ipv4InterfaceContainer i = ipv4.Assign(staDevices);
   ipv4.Assign(apDevices);
 
-  
   uint16_t port = 9;
   uint16_t udpServerNode = (nodeCount/2)+1;
   //create the udp echo server on one device
