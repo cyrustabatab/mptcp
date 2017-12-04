@@ -10,16 +10,20 @@ for f,r in zip(file_list,rtt_list):
         stats_file.write(f + "\n")
 	array  = np.genfromtxt(f)
         rtt_array = np.genfromtxt(r)
-        total_cwnds.append(np.mean(array));
+        total_cwnds.append(np.mean(array))
         max_cwnd = np.max(array) 
-        total_rtts.append(np.mean(rtt_array));
+        min_cwnd = np.min(array)
+        total_rtts.append(np.mean(rtt_array))
         max_rtt = np.max(rtt_array)
-        stats_file.write("CWND Average: " + str(np.mean(array))+ "\n");
+        min_rtt = np.min(rtt_array)
+        stats_file.write("CWND Average: " + str(np.mean(array))+ "\n")
         stats_file.write("CWND Standard Deviation: " + str(np.std(array)) + "\n")
         stats_file.write("Max CWND: " + str(max_cwnd) + "\n")
-        stats_file.write("RTT Average: " + str(np.mean(rtt_array)) + "\n");
-        stats_file.write("RTT Standard Deviation: " + str(np.std(rtt_array)) + "\n");
-        stats_file.write("Max RTT: " + str(max_rtt) + "\n\n");
+        stats_file.write("Min CWND: " + str(min_cwnd) + "\n")
+        stats_file.write("RTT Average: " + str(np.mean(rtt_array)) + "\n")
+        stats_file.write("RTT Standard Deviation: " + str(np.std(rtt_array)) + "\n")
+        stats_file.write("Max RTT: " + str(max_rtt) + "\n")
+        stats_file.write("Min RTT: " + str(min_rtt) + "\n\n")
         
 
 connection_cwnd = np.array(total_cwnds)
