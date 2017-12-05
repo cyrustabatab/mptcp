@@ -3902,14 +3902,15 @@ MpTcpSocketBase::OpenCWND(uint8_t sFlowIdx, uint32_t ackedBytes)
           sFlow->cwnd = cwnd + tmp;
           break;
       case CS218_ALGO:
-	calculateAlpha();
+	        calculateAlpha();
             sFlow->ack_count++;
             if ((sFlow->bestRtt.GetMilliSeconds() == 0) || (sFlow->lastMeasuredRtt.GetMilliSeconds() < sFlow->bestRtt.GetMilliSeconds()))
             sFlow->bestRtt = sFlow->lastMeasuredRtt;
             adder = alpha * sFlow->MSS * sFlow->MSS / totalCwnd;
             // If ACK COUNT is 5, we have recieved 5 successful acks and can rapidly increase cwnd based on measured RTT
             if (sFlow->ack_count > 5) {
-            adder+= adder*sFlow->calculateDwnd();
+                adder+= adder*sFlow->calculateDwnd();
+                //adder += adder*sqrt(sFlow->ack_count);
             }
             adder = std::max(1.0, adder);
             sFlow->cwnd += static_cast<double>(adder);
