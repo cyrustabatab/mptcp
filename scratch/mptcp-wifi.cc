@@ -135,7 +135,7 @@ main(int argc, char *argv[])
   UdpEchoServerHelper echoServer(port);
   ApplicationContainer serverApps = echoServer.Install(nodes.Get(udpServerNode));
   serverApps.Start(Seconds(1.0));
-  serverApps.Start(Seconds(20.0));
+  serverApps.Start(Seconds(10.0));
 
   //create the udp echo client helper and set attributes
   UdpEchoClientHelper echoClient (i.GetAddress(udpServerNode), port);
@@ -154,19 +154,19 @@ main(int argc, char *argv[])
   
   //clientApps = echoClient.Install(nodes.Get(1));
   clientApps.Start(Seconds(1.0));
-  clientApps.Stop(Seconds(20.0));
+  clientApps.Stop(Seconds(10.0));
 
   //set up mptcp packet sink and bulk sender. same as mptcp.cc
   MpTcpPacketSinkHelper sink("ns3::TcpSocketFactory", InetSocketAddress(Ipv4Address::GetAny(), port));
   ApplicationContainer sinkApps = sink.Install(nodes.Get(nodeCount-1));
   sinkApps.Start(Seconds(0.0));
-  sinkApps.Stop(Seconds(20.0));
+  sinkApps.Stop(Seconds(10.0));
 
   MpTcpBulkSendHelper source("ns3::TcpSocketFactory", InetSocketAddress(Ipv4Address(i.GetAddress(nodeCount-1)), port));
   source.SetAttribute("MaxBytes", UintegerValue(0));
   ApplicationContainer sourceApps = source.Install(nodes.Get(0));
   sourceApps.Start(Seconds(0.0));
-  sourceApps.Stop(Seconds(20.0));
+  sourceApps.Stop(Seconds(10.0));
   
   NS_LOG_INFO ("Run Simulation.");
   Simulator::Stop(Seconds(20.0));
