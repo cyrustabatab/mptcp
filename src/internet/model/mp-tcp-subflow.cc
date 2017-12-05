@@ -93,7 +93,8 @@ MpTcpSubFlow::MpTcpSubFlow() :
 
 MpTcpSubFlow::~MpTcpSubFlow()
 {
-  cout <<"Subflow " << routeId << " PACKETS/SECOND: " << ((double)PktCount)/10 << endl;
+  PktCount *= 100; //account for number of packets being sent by subflow each second which is 100 times each second so PktCount is underestimate since counts only one packet each send period
+  cout <<"Subflow " << routeId << " MEGABITS/SECOND: " << ((double)PktCount * 1400 * 8 / 1000000)/10 << endl;
   m_endPoint = 0;
   routeId = 0;
   sAddr = Ipv4Address::GetZero();
