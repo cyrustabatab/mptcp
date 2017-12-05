@@ -42,6 +42,15 @@ MpTcpSubFlow::GetTypeId(void)
   return tid;
 }
 
+// This fuction returns the fraction bestRtt/lastMeasturedRTT
+double MpTcpSubFlow::calculateDwnd()
+{
+if ( lastMeasuredRtt !=0 )
+	return (double)bestRtt.GetMilliSeconds()/(double)lastMeasuredRtt.GetMilliSeconds();
+else
+	return 0;
+}
+
 MpTcpSubFlow::MpTcpSubFlow() :
     routeId(0),
     state(CLOSED),
@@ -59,6 +68,7 @@ MpTcpSubFlow::MpTcpSubFlow() :
   bandwidth = 0;
   cwnd = 0;
   ssthresh = 65535;
+  bestRtt = MilliSeconds(0.0); 
   maxSeqNb = TxSeqNumber - 1;
   highestAck = 0;
   rtt = CreateObject<RttMeanDeviation>();

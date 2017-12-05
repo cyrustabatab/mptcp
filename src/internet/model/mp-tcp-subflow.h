@@ -58,6 +58,7 @@ public:
   void SetFinSequence(const SequenceNumber32& s);
   bool Finished();
   DSNMapping *GetunAckPkt();
+  double calculateDwnd(); 
 
   uint16_t routeId;           // Subflow's ID
   bool connected;             // Subflow's connection status
@@ -90,6 +91,8 @@ public:
   multiset<double> measuredRTT;
   Ptr<RttMeanDeviation> rtt;  // RTT calculator
   Time lastMeasuredRtt;       // Last measured RTT, used for plotting
+  Time bestRtt;		      // Best RTT value
+  int ack_count;              // Get Ack Count  
   uint32_t TxSeqNumber;       // Subflow's next expected sequence number to send
   uint32_t RxSeqNumber;       // Subflow's next expected sequence number to receive
   uint64_t PktCount;          // number of sent packets
