@@ -93,6 +93,7 @@ MpTcpSubFlow::MpTcpSubFlow() :
 
 MpTcpSubFlow::~MpTcpSubFlow()
 {
+  cout <<"Subflow " << routeId << " PACKETS/SECOND: " << ((double)PktCount)/10 << endl;
   m_endPoint = 0;
   routeId = 0;
   sAddr = Ipv4Address::GetZero();
