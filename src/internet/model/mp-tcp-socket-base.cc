@@ -3910,7 +3910,7 @@ MpTcpSocketBase::OpenCWND(uint8_t sFlowIdx, uint32_t ackedBytes)
             // If ACK COUNT is 5, we have recieved 5 successful acks and can rapidly increase cwnd based on measured RTT
             if (sFlow->ack_count > 5) {
                 adder+= adder*sFlow->calculateDwnd();
-                //adder += adder*sqrt(sFlow->ack_count);
+                //adder += adder*sFlow->ack_count;
             }
             adder = std::max(1.0, adder);
             sFlow->cwnd += static_cast<double>(adder);
