@@ -6,7 +6,6 @@ You can refer to this code in your paper by citing the above short paper.
 Credits: https://github.com/mkheirkhah/mmptcp
 
 Evaluation of congestion control of MPTCP
-Testing notifications
 
 Create multiple topologies to test congestion. Under tutorial/examples ns-3 provides examples of differing topologies that we can extend.
 Create multiple TCP connections between hosts in order to test congestion control.
@@ -15,7 +14,6 @@ Later, once evaluations are done, we can look into tweaking existing algorithm
 
 =======
 Added mechanism to create own congestion control algorithm called CS218_ALGO
-which can be implemented within the switch statement.
 Set enum_value to the congestion control algorithm we are running.
 
 INSTRUCTIONS
@@ -32,6 +30,5 @@ To pipe output into a log file:
  
 To collect statistics:
 python stats.py
-nano stats.txt
+vi stats.txt
 
-Testing Push - Akshay Shetty
