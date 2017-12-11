@@ -18,7 +18,7 @@ for i in *.eps;
         old_file=$i"_"$prefix"_"$now.png;
 
         echo "Generate: " $old_file
-        convert -density 300 $i -resize "1428x1000" -quality 100 -flatten $old_file;
+        convert -density 300 $i -resize "500x350" -quality 100 -flatten $old_file;
     done
 
 rm -f *.eps
