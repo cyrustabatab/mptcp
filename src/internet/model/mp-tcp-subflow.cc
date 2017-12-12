@@ -93,8 +93,8 @@ MpTcpSubFlow::MpTcpSubFlow() :
 
 MpTcpSubFlow::~MpTcpSubFlow()
 {
-  PktCount *= 100; //account for number of packets being sent by subflow each second which is 100 times each second so PktCount is underestimate since counts only one packet each send period
-  cout <<"Subflow " << routeId << " MEGABITS/SECOND: " << ((double)PktCount * 1400 * 8 / 1000000)/10 << endl;
+  
+  cout <<"Subflow " << routeId << " MEGABITS/SECOND: " << ((double)PktCount * 1400 * 8 / 1000000) << endl;
   m_endPoint = 0;
   routeId = 0;
   sAddr = Ipv4Address::GetZero();
@@ -128,6 +128,8 @@ MpTcpSubFlow::StartTracing(string traced)
 void
 MpTcpSubFlow::CwndTracer(uint32_t oldval, uint32_t newval)
 {
+  
+  
   //NS_LOG_UNCOND("Subflow "<< routeId <<": Moving cwnd from " << oldval << " to " << newval);
   //cout << "Subflow " << routeId << ": Moving cwnd from " << oldval << " to " << newval << endl;
   cout << "SF " << routeId << " " << newval << endl;
@@ -149,6 +151,7 @@ MpTcpSubFlow::AddDSNMapping(uint8_t sFlowIdx, uint64_t dSeqNum, uint16_t dLvlLen
 void
 MpTcpSubFlow::SetFinSequence(const SequenceNumber32& s)
 {
+  
   NS_LOG_FUNCTION (this);
   m_gotFin = true;
   m_finSeq = s;
